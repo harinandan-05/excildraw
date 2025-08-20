@@ -46,19 +46,17 @@ wss.on("connection", (ws, request) => {
 
   console.log(`User ${userId} connected. Total: ${users.length}`);
 
-  ws.on("message", async (rawData) => {
+  ws.on("message", async function message(data){
     let parsedData: any;
-    try {
-      parsedData = JSON.parse(
-        typeof rawData === "string" ? rawData : rawData.toString()
-      );
-    } catch (err) {
-      console.error("Invalid JSON:", err);
-      return;
+    if (typeof data !== "string") {
+      parsedData = JSON.parse(data.toString());
+      console.log(parsedData)
+    } else {
+      parsedData = JSON.parse(data); // {type: "join-room", roomId: 1}
     }
 
     if (parsedData.type === "join_room") {
-      newUser.rooms.push(parsedData.roomId);
+      newUser.rooms.push(parsedData.roomid);
       console.log(`User ${userId} joined room ${parsedData.roomId}`);
     }
 
@@ -69,18 +67,28 @@ wss.on("connection", (ws, request) => {
 
 
     if (parsedData.type === "chat") {
-      const { roomId, message } = parsedData;
+      const { roomid, message } = parsedData;
+      const roomIdInt = Number(roomid);
+
+      if (isNaN(roomIdInt)) {
+      console.error("Invalid roomid:", roomid);
+      return;
+      }
+
 
       await prismaClient.chat.create({
         data: {
-          roomid: roomId,
+          roomid: roomIdInt,
           message,
           userId,
         },
       });
-      
+            
       users.forEach((user) => {
-        if (user.rooms.includes(roomId)) {
+        console.log("control at socket broadcasting",user)
+
+        if (user.rooms.includes(roomid)) {
+          console.log(roomid ,"roomid broadcast")
           user.ws.send(
             JSON.stringify({
               type: "chat",
@@ -88,6 +96,7 @@ wss.on("connection", (ws, request) => {
               userId,
             })
           );
+          console.log(message,"broadcastde message")
         }
       });
     }

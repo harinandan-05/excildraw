@@ -117,6 +117,33 @@ router.post('/chat',usermiddleware,async(req,res) => {
 })
 
 
+router.get("/chats/:roomId", async (req, res) => {
+  const roomid = Number(req.params.roomId);
+  const chats = await prismaClient.chat.findMany({
+    where: { roomid }
+  });
 
+  res.json({ messages: chats }); 
+});
+
+
+router.post("/push", async (req, res) => {
+  try {
+    const { roomid, userId, message } = req.body;
+
+    const pushed = await prismaClient.chat.create({
+      data: {
+        message,
+        roomid,
+        userId
+      }
+    });
+
+    res.json(pushed);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
 
 export default router;
