@@ -85,10 +85,9 @@ wss.on("connection", (ws, request) => {
       });
             
       users.forEach((user) => {
-        console.log("control at socket broadcasting",user)
+
 
         if (user.rooms.includes(roomid)) {
-          console.log(roomid ,"roomid broadcast")
           user.ws.send(
             JSON.stringify({
               type: "chat",
@@ -96,7 +95,7 @@ wss.on("connection", (ws, request) => {
               userId,
             })
           );
-          console.log(message,"broadcastde message")
+          
         }
       });
     }

@@ -11,8 +11,7 @@ type Shape =
     }
   | {
       type: "pen";
-      x: number;
-      y: number;
+      points: { x: number; y: number }[];
     };
 
 export default async function initDraw(
@@ -31,16 +30,15 @@ export default async function initDraw(
   console.log("initial shapes:", existingShapes);
 
   socket.addEventListener("message", (ev) => {
-  const data = JSON.parse(ev.data);
-  if (data.type === "chat") {
-    const parsedData = JSON.parse(data.message);
-    if (parsedData.shape) {
-      existingShapes.push(parsedData.shape);
-      reDraw(ctx, canvas, existingShapes);
+    const data = JSON.parse(ev.data);
+    if (data.type === "chat") {
+      const parsedData = JSON.parse(data.message);
+      if (parsedData.shape) {
+        existingShapes.push(parsedData.shape);
+        reDraw(ctx, canvas, existingShapes);
+      }
     }
-  }
-});
-
+  });
 
   ctx.fillStyle = "#1e1e1e";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -51,11 +49,18 @@ export default async function initDraw(
   let drawing = false;
   let startX = 0;
   let startY = 0;
+  let currentPen: { x: number; y: number }[] = [];
 
   const handleMousedown = (e: MouseEvent) => {
     drawing = true;
     startX = e.offsetX;
     startY = e.offsetY;
+
+    if (tool === "pen") {
+      currentPen = [{ x: startX, y: startY }];
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+    }
   };
 
   const handleMouseup = (e: MouseEvent) => {
@@ -77,7 +82,7 @@ export default async function initDraw(
         JSON.stringify({
           type: "chat",
           message: JSON.stringify({
-            shape: rect, 
+            shape: rect,
           }),
           roomid,
         })
@@ -85,18 +90,16 @@ export default async function initDraw(
     }
 
     if (tool === "pen") {
-      const pen: Shape = {
+      const penShape: Shape = {
         type: "pen",
-        x: currentX,
-        y: currentY,
+        points: currentPen,
       };
-      existingShapes.push(pen);
-
+      existingShapes.push(penShape);
       socket.send(
         JSON.stringify({
           type: "chat",
           message: JSON.stringify({
-            shape: pen,
+            penShape,
           }),
           roomid,
         })
@@ -113,6 +116,10 @@ export default async function initDraw(
     const currentY = e.offsetY;
 
     if (tool === "pen") {
+      currentPen.push({
+        x: currentX,
+        y: currentY,
+      });
       ctx.lineTo(currentX, currentY);
       ctx.stroke();
     }
@@ -154,9 +161,16 @@ export function reDraw(
       ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
     }
     if (shape.type === "pen") {
+      if (!shape.points || shape.points.length === 0) {
+        console.warn("Skipping pen shape with no points", shape);
+        continue; // avoid crashing
+      }
+
       ctx.beginPath();
-      ctx.moveTo(shape.x, shape.y);
-      ctx.lineTo(shape.x, shape.y);
+      ctx.moveTo(shape.points[0].x, shape.points[0].y);
+      for (let i = 1; i < shape.points.length; i++) {
+        ctx.lineTo(shape.points[i].x, shape.points[i].y);
+      }
       ctx.stroke();
     }
   }
@@ -167,10 +181,12 @@ export async function getShapes(roomid: string) {
     `http://localhost:3001/api/v1/chats/${roomid}`
   );
   const messages = response.data.messages;
-
-  const shapes: Shape[] = messages.map((x: { message: string }) =>
-    JSON.parse(x.message).shape 
+  console.log(messages,"from backend")
+  
+  const shapes: Shape[] = messages.map(
+    (x: { message: string }) => JSON.parse(x.message).shape
   );
+  console.log("hai",shapes)
 
   return shapes;
 }
