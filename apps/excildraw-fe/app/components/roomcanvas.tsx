@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MainCanvas from "./mainCanvas";
+import { Canvas } from "./mainCanvas";
 import { WS_BACKEND } from "../config";
 
 type RoomCanvasProps = {
@@ -8,7 +8,7 @@ type RoomCanvasProps = {
 
 export default function RoomCanvas({ roomid }: RoomCanvasProps) {
   const [socket, setSocket] = useState<WebSocket>();
-  console.log(roomid,"from room canvas")
+
   useEffect(() => {
     const ws = new WebSocket(`${WS_BACKEND}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiOTc4Yjk1LTIwMWEtNGFiNi1hZWZkLTBhNzhhYjM5NjM4YyIsImlhdCI6MTc1NTYxNzM3MX0.68q6UFCjmEOVDdp2for7tluD6OFsaLxhYOEyQcvviWU`); 
     setSocket(ws);
@@ -26,10 +26,11 @@ export default function RoomCanvas({ roomid }: RoomCanvasProps) {
     };
   }, [roomid]);
 
+  
   if(!socket){
     return <div>
         loading.......
     </div>
   }
-  return <MainCanvas roomid={roomid} socket={socket}/>;
+  return <Canvas roomid={roomid} socket={socket}/>;
 }

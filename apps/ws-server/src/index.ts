@@ -75,7 +75,6 @@ wss.on("connection", (ws, request) => {
       return;
       }
 
-
       await prismaClient.chat.create({
         data: {
           roomid: roomIdInt,

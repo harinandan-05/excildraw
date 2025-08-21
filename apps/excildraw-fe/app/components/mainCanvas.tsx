@@ -1,56 +1,75 @@
 "use client";
 
-import initDraw from "@/app/draw";
 import { use, useEffect, useRef, useState, } from "react";
 import { useParams } from "next/navigation";
-import { IconBtn } from "./inconButton";
+import { IconBtn } from "./iconButton";
 import { BiPencil } from "react-icons/bi";
 import { BsPencilFill } from "react-icons/bs";
-import { PencilIcon, RectangleEllipsisIcon, RectangleHorizontal } from "lucide-react";
+import { Circle, Pencil, PencilIcon, RectangleEllipsisIcon, RectangleHorizontal, RectangleHorizontalIcon } from "lucide-react";
+import { Game } from "../draw/game";
+export type Tool = "circle" | "rect" | "pencil";
 
-
-export default function MainCanvas({roomid,socket}:{
-    roomid:string,
-    socket:WebSocket
+export function Canvas({
+    roomid,
+    socket
+}: {
+    socket: WebSocket;
+    roomid: string;
 }) {
-    const [tool ,setTool] = useState<"pen"|"rect">("rect")
-    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [game, setGame] = useState<Game>();
+    const [selectedTool, setSelectedTool] = useState<Tool>("circle")
 
-    useEffect(() =>{
-        const canvas = canvasRef.current
-        if(!canvas){return}
-        initDraw(canvas,tool,roomid,socket)
-    
-    },[tool])
+    useEffect(() => {
+        game?.setTool(selectedTool);
+    }, [selectedTool, game]);
 
-  return (
-    
-    <div>
-      <canvas ref={canvasRef}></canvas>
-      <Topbar tool={tool} setTool={setTool} />
+    useEffect(() => {
+
+        if (canvasRef.current) {
+            const g = new Game(canvasRef.current, roomid, socket);
+            setGame(g);
+
+            return () => {
+                g.destroy();
+            }
+        }
+
+
+    }, [canvasRef]);
+
+    return <div style={{
+        height: "100vh",
+        overflow: "hidden"
+    }}>
+        <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight}></canvas>
+        <Topbar setSelectedTool={setSelectedTool} selectedTool={selectedTool} />
     </div>
-  );
 }
 
-
-function Topbar({tool,setTool}:{
-  tool:"pen" | "rect";
- setTool: React.Dispatch<React.SetStateAction<"pen" | "rect">>
-}){
-  return(
-<div style={{
-      height:"100vh",
-      overflow:"hidden"
-    }}>
-        <div style={{
-          position:"fixed",
-          top:10,
-          display:"flex",
-          justifyContent:"center",
+function Topbar({selectedTool, setSelectedTool}: {
+    selectedTool: Tool,
+    setSelectedTool: (s: Tool) => void
+}) {
+    return <div style={{
+            position: "fixed",
+            top: 10,
+            left: 10
         }}>
-          <IconBtn icon={<PencilIcon />} onClick={() => setTool("pen")}/>
-          <IconBtn icon={<RectangleHorizontal/>} onClick={() => setTool("rect")}/>
-    </div>
-    </div>
-  )
+            <div className="flex gap-t">
+                <IconBtn
+                    onClick={() => {
+                        setSelectedTool("pencil")
+                    }}
+                    activated={selectedTool === "pencil"}
+                    icon={<Pencil />}
+                />
+                <IconBtn onClick={() => {
+                    setSelectedTool("rect")
+                }} activated={selectedTool === "rect"} icon={<RectangleHorizontalIcon />} ></IconBtn>
+                <IconBtn onClick={() => {
+                    setSelectedTool("circle")
+                }} activated={selectedTool === "circle"} icon={<Circle />}></IconBtn>
+            </div>
+        </div>
 }
