@@ -7,5 +7,6 @@ export default function Canvaspage(){
   const roomid  = params.roomid
   console.log(roomid,"canvas room")
 
-  return <RoomCanvas roomid={roomid} />
+  return <RoomCanvas roomid={Number(roomid)} />
+
 }

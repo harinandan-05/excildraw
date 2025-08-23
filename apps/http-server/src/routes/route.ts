@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import express from 'express'
-import jsonwebtoken from 'jsonwebtoken';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {prismaClient} from '@repo/database/client'

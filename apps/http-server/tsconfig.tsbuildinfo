@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/types.d.ts","./src/routes/middleware.ts","./src/routes/route.ts"],"version":"5.9.2"}
+{"root":["./src/index.ts","./src/types.d.ts","./src/routes/middleware.ts","./src/routes/route.ts"],"errors":true,"version":"5.9.2"}
