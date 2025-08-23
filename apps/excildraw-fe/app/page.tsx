@@ -14,7 +14,7 @@ export default function Home() {
   
       <div className="relative z-10 max-w-3xl text-center">
         <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 mb-6">
-          Welcome to Excildraw
+          Welcome to Collab canvas
         </h1>
         <p className="text-lg md:text-xl text-gray-700 mb-8">
           Your collaborative whiteboard for creative ideas and team brainstorming. 

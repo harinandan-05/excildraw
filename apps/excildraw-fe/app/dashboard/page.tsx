@@ -60,65 +60,70 @@ export default function Dashboard() {
     router.push("/signin");
   };
 
-  return (
-    <div className="flex min-h-screen bg-gray-100">
-      <aside className="w-72 bg-white shadow-lg flex flex-col">
-        <div className="p-4 border-b">
-          <h2 className="text-xl font-bold">Your Rooms</h2>
+   return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex">
+
+      <aside className="w-80 bg-white shadow-2xl flex flex-col rounded-tr-2xl rounded-br-2xl overflow-hidden">
+        <div className="p-6 border-b">
+          <h2 className="text-2xl font-bold text-gray-800 text-center">Your Rooms</h2>
         </div>
-        <ul className="flex-1 bg-gray-50 p-2 overflow-y-auto">
+
+        <ul className="flex-1 bg-gray-50 p-4 overflow-y-auto space-y-3">
           {rooms.length ? (
             rooms.map((room) => (
               <li
                 key={room.id}
-                className="p-3 mb-2 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-blue-100 hover:shadow-md transition"
                 onClick={() => router.push(`/canvas/${room.id}`)}
+                className="p-3 bg-white rounded-xl shadow-md cursor-pointer hover:shadow-xl hover:bg-blue-100 transition flex flex-col"
               >
-                <span className="font-medium text-gray-700">{room.slug}</span>
-                <p className="text-xs text-gray-500">ID: {room.id}</p>
+                <span className="font-semibold text-gray-700 text-lg">{room.slug}</span>
+                <span className="text-xs text-gray-500 mt-1">ID: {room.id}</span>
               </li>
             ))
           ) : (
-            <li className="text-gray-500 text-center py-4">No rooms yet</li>
+            <li className="text-gray-400 text-center py-6">No rooms yet</li>
           )}
         </ul>
-        <div className="p-4 border-t">
+
+        <div className="p-6 border-t">
           <button
             onClick={logout}
-            className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+            className="w-full bg-red-500 text-white py-3 rounded-xl hover:bg-red-600 transition font-semibold"
           >
             Logout
           </button>
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col p-8">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-        <div className="flex flex-col gap-4 max-w-md">
-          <div className="flex gap-2">
+      <main className="flex-1 p-10">
+        <h1 className="text-4xl font-bold mb-8 text-gray-800">Dashboard</h1>
+
+        <div className="max-w-lg space-y-6">
+          <div className="flex gap-3">
             <input
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
               placeholder="Room name"
-              className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="flex-1 p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
             />
             <button
               onClick={createRoom}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+              className="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition shadow-md"
             >
               Create
             </button>
           </div>
-          <div className="flex gap-2">
+
+          <div className="flex gap-3">
             <input
               value={joinRoomId}
               onChange={(e) => setJoinRoomId(e.target.value)}
               placeholder="Enter room ID"
-              className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-green-400"
+              className="flex-1 p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 shadow-sm"
             />
             <button
               onClick={joinRoom}
-              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+              className="bg-green-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-600 transition shadow-md"
             >
               Join
             </button>

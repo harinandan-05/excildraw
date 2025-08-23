@@ -32,28 +32,41 @@ export default function Signin() {
     }
   };
 
-  return (
-    <form onSubmit={handleSignin} className="flex flex-col gap-2 max-w-sm mx-auto mt-10">
-      <h1 className="text-xl font-bold">Sign In</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className="border p-2 rounded"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        className="border p-2 rounded"
-      />
-      <button type="submit" className="bg-green-500 text-white p-2 rounded">
-        Sign In
-      </button>
-    </form>
+   return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-white px-4">
+      <div className="bg-white shadow-xl rounded-xl p-10 w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Collab canvas Sign In</h1>
+        <form onSubmit={handleSignin} className="flex flex-col gap-4">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition font-semibold"
+          >
+            Sign In
+          </button>
+        </form>
+        <p className="mt-4 text-center text-gray-500">
+          Don't have an account?{" "}
+          <a href="/signup" className="text-blue-500 font-semibold hover:underline">
+            Sign Up
+          </a>
+        </p>
+      </div>
+    </div>
   );
 }

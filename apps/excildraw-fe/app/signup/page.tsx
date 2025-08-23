@@ -37,35 +37,48 @@ export default function Signup() {
   };
 
   return (
-    <form onSubmit={handleSignup} className="flex flex-col gap-2 max-w-sm mx-auto mt-10">
-      <h1 className="text-xl font-bold">Sign Up</h1>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        className="border p-2 rounded"
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className="border p-2 rounded"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        className="border p-2 rounded"
-      />
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-        Sign Up
-      </button>
-    </form>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-white px-4">
+      <div className="bg-white shadow-xl rounded-xl p-10 w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Collab canvas Sign Up</h1>
+        <form onSubmit={handleSignup} className="flex flex-col gap-4">
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition font-semibold"
+          >
+            Sign Up
+          </button>
+        </form>
+        <p className="mt-4 text-center text-gray-500">
+          Already have an account?{" "}
+          <a href="/signin" className="text-blue-500 font-semibold hover:underline">
+            Sign In
+          </a>
+        </p>
+      </div>
+    </div>
   );
 }
