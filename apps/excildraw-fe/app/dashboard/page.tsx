@@ -58,9 +58,19 @@ export default function Dashboard() {
 
     window.location.href = `http://localhost:3002/canvas/${newRoom.id}`;
   } catch (err: unknown) {
+  if (axios.isAxiosError(err)) {
+   
     console.error("Create room error:", err.response?.data || err.message);
-    alert("Failed to create room. Check console for details.");
+  } else if (err instanceof Error) {
+    
+    console.error("Create room error:", err.message);
+  } else {
+    console.error("Create room error:", err);
   }
+
+  alert("Failed to create room. Check console for details.");
+}
+
 }
 
   function joinRoom() {
