@@ -22,7 +22,9 @@ type Shape = {
 
 export async function initDraw(canvas: HTMLCanvasElement, roomid: string, socket: WebSocket) {
     const ctx = canvas.getContext("2d");
-
+    if(typeof roomid === "string"){
+        return
+    }
     let existingShapes: Shape[] = await getShapes(roomid)
 
     if (!ctx) {
@@ -136,14 +138,3 @@ function clearCanvas(existingShapes: Shape[], canvas: HTMLCanvasElement, ctx: Ca
     })
 }
 
-async function getExistingShapes(roomId: string) {
-    const res = await axios.get(`http://localhost:3001/api/v1/chats/${roomid}${roomId}`);
-    const messages = res.data.messages;
-
-    const shapes = messages.map((x: {message: string}) => {
-        const messageData = JSON.parse(x.message)
-        return messageData.shape;
-    })
-
-    return shapes;
-}
