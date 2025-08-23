@@ -1,5 +1,4 @@
-import { Router } from 'express';
-import express from 'express'
+import express, { Request, Response, Router } from "express";   
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {prismaClient} from '@repo/database/client'
@@ -8,7 +7,7 @@ import {JWT_SECRET} from '@repo/backend-envs/config'
 
 const prisma =  prismaClient
 const router:Router = express.Router();
-router.post('/signup',async (req,res) => {
+router.post('/signup',async (req:Request,res:Response) => {
     try{
         
     const { email , password ,name } = req.body;
@@ -53,7 +52,7 @@ router.post('/signup',async (req,res) => {
     }
 })
 
-router.post('/signin',async(req,res) => {
+router.post('/signin',async(req:Request,res:Response) => {
     const { name, password ,email } = req.body
     try{
     if(!email || !password || !name){
@@ -89,7 +88,7 @@ router.post('/signin',async(req,res) => {
 })
 
 
-router.post("/room", usermiddleware, async (req, res) => {
+router.post("/room", usermiddleware, async (req:Request,res:Response) => {
   try {
     const userId = req.user;
     const { slug } = req.body;
@@ -126,13 +125,22 @@ router.post("/room", usermiddleware, async (req, res) => {
 });
 
 
-router.get("/room/:roomId", async (req, res) => {
-  const roomid: number = parseInt(req.params.roomId, 10);
-  const chats = await prismaClient.chat.findMany({
-    where: { roomid }
-  });
+router.get("/room/:roomId", async (req: Request, res: Response) => {
+  const roomIdParam = req.params.roomId;
 
-  res.json({ messages: chats }); 
+  if (!roomIdParam) {
+    return res.status(400).json({ error: "Room ID is required" });
+  }
+
+  const roomId = parseInt(roomIdParam, 10);
+  if (isNaN(roomId)) {
+    return res.status(400).json({ error: "Room ID must be a number" });
+  }
+
+  const chats = await prismaClient.chat.findMany({
+    where: { roomid: roomId }
+  });
+  res.json({ messages: chats });
 });
 
 
@@ -156,7 +164,7 @@ router.post("/push", async (req, res) => {
 });
 
 
-router.get("/dashboard", usermiddleware, async (req, res) => {
+router.get("/dashboard", usermiddleware, async (req:Request,res:Response) => {
   try {
     const userId = req.user;
 
@@ -186,7 +194,7 @@ router.get("/dashboard", usermiddleware, async (req, res) => {
 });
 
 
-router.get("/room", usermiddleware, async (req, res) => {
+router.get("/room", usermiddleware, async (req:Request,res:Response) => {
   try {
     const userId = req.user;
 
@@ -207,8 +215,5 @@ router.get("/room", usermiddleware, async (req, res) => {
   }
 });
 ;
-
-
-
 
 export default router;
