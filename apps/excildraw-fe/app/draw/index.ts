@@ -56,7 +56,7 @@ export async function initDraw(canvas: HTMLCanvasElement, roomid: string, socket
         const width = e.clientX - startX;
         const height = e.clientY - startY;
 
-        // @ts-ignore
+        // @ts-expect-error
         const selectedTool = window.selectedTool;
         let shape: Shape | null = null;
         if (selectedTool === "rect") {
@@ -101,7 +101,7 @@ export async function initDraw(canvas: HTMLCanvasElement, roomid: string, socket
             const height = e.clientY - startY;
             clearCanvas(existingShapes, canvas, ctx);
             ctx.strokeStyle = "rgba(255, 255, 255)"
-            // @ts-ignore
+            // @ts-expect-error
             const selectedTool = window.selectedTool;
             if (selectedTool === "rect") {
                 ctx.strokeRect(startX, startY, width, height);   
