@@ -20,9 +20,20 @@ export default function Signup() {
       });
       router.push("/signin");
     } catch (err: unknown) {
-      console.error(err.response?.data || err.message);
-      alert(err.response?.data?.error || "Signup failed");
-    }
+  if (axios.isAxiosError(err)) {
+    
+    console.error(err.response?.data || err.message);
+    alert(err.response?.data?.error || "Signup failed");
+  } else if (err instanceof Error) {
+    
+    console.error(err.message);
+    alert(err.message);
+  } else {
+    console.error(err);
+    alert("Signup failed");
+  }
+}
+
   };
 
   return (

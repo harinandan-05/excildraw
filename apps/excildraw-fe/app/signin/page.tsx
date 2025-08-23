@@ -7,7 +7,6 @@ import axios from "axios";
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const router = useRouter();
 
   const handleSignin = async (e: React.FormEvent) => {
@@ -16,13 +15,20 @@ export default function Signin() {
       const res = await axios.post("http://localhost:3001/api/v1/signin", {
         email,
         password,
-        name
       });
       localStorage.setItem("token", res.data.token);
       router.push("/dashboard");
     } catch (err: unknown) {
-      console.error(err.response?.data || err.message);
-      alert(err.response?.data?.error || "Signin failed");
+      if (axios.isAxiosError(err)) {
+        alert(err.response?.data?.error || "Signin failed");
+        console.error(err.response?.data || err.message);
+      } else if (err instanceof Error) {
+        alert(err.message);
+        console.error(err.message);
+      } else {
+        alert("Signin failed");
+        console.error(err);
+      }
     }
   };
 
@@ -42,14 +48,6 @@ export default function Signin() {
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        required
-        className="border p-2 rounded"
-      />
-      <input
-        type="name"
-        placeholder="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
         required
         className="border p-2 rounded"
       />

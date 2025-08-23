@@ -28,14 +28,15 @@ export default function Auth({ mode }: { mode: "signup" | "signin" }) {
         });
         router.push("/dashboard");
       }
-    } catch (err:unknown) {
-      console.error("Auth failed:", err.response?.data || err.message, err);
-      alert("Auth failed");
+    } catch (err) {
+      // Simple logging, works for both Axios and normal errors
+      console.error(err);
+      alert("Authentication failed. Check console for details.");
     }
   };
 
   return (
-    <form onSubmit={handleAuth}>
+    <form onSubmit={handleAuth} className="flex flex-col gap-2 max-w-md">
       {mode === "signup" && (
         <input
           type="text"
@@ -43,6 +44,7 @@ export default function Auth({ mode }: { mode: "signup" | "signin" }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          className="p-2 border rounded"
         />
       )}
       <input
@@ -51,6 +53,7 @@ export default function Auth({ mode }: { mode: "signup" | "signin" }) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        className="p-2 border rounded"
       />
       <input
         type="password"
@@ -58,8 +61,14 @@ export default function Auth({ mode }: { mode: "signup" | "signin" }) {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        className="p-2 border rounded"
       />
-      <button type="submit">{mode === "signup" ? "Sign Up" : "Sign In"}</button>
+      <button
+        type="submit"
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+      >
+        {mode === "signup" ? "Sign Up" : "Sign In"}
+      </button>
     </form>
   );
 }
