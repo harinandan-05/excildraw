@@ -11,7 +11,7 @@ export function Canvas({
     socket
 }: {
     socket: WebSocket;
-    roomid: Number;
+    roomid:number;
 }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [game, setGame] = useState<Game>();

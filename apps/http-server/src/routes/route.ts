@@ -109,7 +109,7 @@ router.post("/room", usermiddleware, async (req, res) => {
     const room = await prisma.room.create({
       data: {
         slug,
-        adminId: userId
+        adminId: userId!
       },
       select: {
         id: true,
@@ -128,7 +128,7 @@ router.post("/room", usermiddleware, async (req, res) => {
 
 
 router.get("/room/:roomId", async (req, res) => {
-  const roomid = Number(req.params.roomId);
+  const roomid: number = parseInt(req.params.roomId, 10);
   const chats = await prismaClient.chat.findMany({
     where: { roomid }
   });

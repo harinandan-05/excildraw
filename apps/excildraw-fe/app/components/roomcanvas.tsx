@@ -3,7 +3,7 @@ import { Canvas } from "./mainCanvas";
 import { WS_BACKEND } from "../config";
 
 type RoomCanvasProps = {
-  roomid: Number;
+  roomid: number;
 };
 
 export default function RoomCanvas({ roomid }: RoomCanvasProps) {

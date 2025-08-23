@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function getShapes(roomid: Number) {
+export async function getShapes(roomid: number) {
   const response = await axios.get(
     `http://localhost:3001/api/v1/room/${roomid}`
   );
