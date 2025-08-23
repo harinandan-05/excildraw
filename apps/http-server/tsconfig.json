@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
+    "skipLibCheck": true
   },
   "include": ["src", "types.file.ts", "src/configs"]
 }
