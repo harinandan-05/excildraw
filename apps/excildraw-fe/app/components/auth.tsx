@@ -28,7 +28,7 @@ export default function Auth({ mode }: { mode: "signup" | "signin" }) {
         });
         router.push("/dashboard");
       }
-    } catch (err: any) {
+    } catch (err:unknown) {
       console.error("Auth failed:", err.response?.data || err.message, err);
       alert("Auth failed");
     }

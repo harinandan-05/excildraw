@@ -8,7 +8,7 @@ const wss = new WebSocketServer({ port: 8080 });
 interface User {
   userId: string;
   ws: WebSocket;
-  rooms: string[];
+  rooms: string[]; 
 }
 
 const users: User[] = [];
@@ -46,54 +46,56 @@ wss.on("connection", (ws, request) => {
 
   console.log(`User ${userId} connected. Total: ${users.length}`);
 
-  ws.on("message", async function message(data){
-    let parsedData: any;
-    if (typeof data !== "string") {
-      parsedData = JSON.parse(data.toString());
-    } else {
-      parsedData = JSON.parse(data); // {type: "join-room", roomId: 1}
+  ws.on("message", async function message(data) {
+    let parsedData: { type: string; roomid?: string; message?: string };
+
+    try {
+      parsedData =
+        typeof data === "string" ? JSON.parse(data) : JSON.parse(data.toString());
+    } catch (err) {
+      console.error("Invalid JSON", err);
+      return;
     }
 
-    if (parsedData.type === "join_room") {
+    if (parsedData.type === "join_room" && parsedData.roomid) {
       newUser.rooms.push(parsedData.roomid);
-      console.log(`User ${userId} joined room ${parsedData.roomId}`);
+      console.log(`User ${userId} joined room ${parsedData.roomid}`);
     }
 
-    if (parsedData.type === "leave_room") {
-      newUser.rooms = newUser.rooms.filter((r) => r !== parsedData.roomId);
-      console.log(`User ${userId} left room ${parsedData.roomId}`);
+    if (parsedData.type === "leave_room" && parsedData.roomid) {
+      newUser.rooms = newUser.rooms.filter((r) => r !== parsedData.roomid);
+      console.log(`User ${userId} left room ${parsedData.roomid}`);
     }
 
-
-    if (parsedData.type === "chat") {
-      const { roomid, message } = parsedData;
-      const roomIdInt = Number(roomid);
+    if (parsedData.type === "chat" && parsedData.roomid && parsedData.message) {
+      const roomIdInt = Number(parsedData.roomid);
 
       if (isNaN(roomIdInt)) {
-      console.error("Invalid roomid:", roomid);
-      return;
+        console.error("Invalid roomid:", parsedData.roomid);
+        return;
       }
 
-      await prismaClient.chat.create({
-        data: {
-          roomid: roomIdInt,
-          message,
-          userId,
-        },
-      });
-            
+      try {
+        await prismaClient.chat.create({
+          data: {
+            roomid: roomIdInt,
+            message: parsedData.message,
+            userId,
+          },
+        });
+      } catch (err) {
+        console.error("Failed to save chat:", err);
+      }
+
       users.forEach((user) => {
-
-
-        if (user.rooms.includes(roomid)) {
+        if (user.rooms.includes(parsedData.roomid!)) {
           user.ws.send(
             JSON.stringify({
               type: "chat",
-              message,
+              message: parsedData.message,
               userId,
             })
           );
-          
         }
       });
     }

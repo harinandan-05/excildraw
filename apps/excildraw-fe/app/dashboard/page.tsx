@@ -6,7 +6,7 @@ import { HTTP_BACKEND } from "../config";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
-  const [rooms, setRooms] = useState<any[]>([]);
+  const [rooms, setRooms] = useState<unknown[]>([]);
   const [slug, setSlug] = useState("");
   const [joinRoomId, setJoinRoomId] = useState("");
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function Dashboard() {
     setSlug("");
 
     window.location.href = `http://localhost:3002/canvas/${newRoom.id}`;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Create room error:", err.response?.data || err.message);
     alert("Failed to create room. Check console for details.");
   }

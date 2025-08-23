@@ -19,7 +19,7 @@ export default function Signup() {
         password,
       });
       router.push("/signin");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err.response?.data || err.message);
       alert(err.response?.data?.error || "Signup failed");
     }

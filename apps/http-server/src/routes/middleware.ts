@@ -15,7 +15,7 @@ export const usermiddleware = (req: Request, res: Response, next: NextFunction) 
         if(!decoded.id){
             return res.status(400).json({msg:"no jwt payload"})
         } 
-        (req as any).user = decoded.id;
+        req.user = decoded.id;
         next();
     } catch (err) {
         return res.status(400).json({ msg: "Invalid token" });

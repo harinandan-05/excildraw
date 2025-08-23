@@ -20,7 +20,7 @@ export default function Signin() {
       });
       localStorage.setItem("token", res.data.token);
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err.response?.data || err.message);
       alert(err.response?.data?.error || "Signin failed");
     }

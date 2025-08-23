@@ -92,8 +92,15 @@ router.post('/signin',async(req,res) => {
 
 router.post("/room", usermiddleware, async (req, res) => {
   try {
-    const userId = (req as any).user;
+    const userId = req.user;
     const { slug } = req.body;
+
+    if (!slug) {
+      return res.status(400).json({ msg: "Slug is required" });
+    }
+     if (!userId) {
+      return res.status(401).json({ msg: "Unauthorized" });
+    }
 
     if (!slug) {
       return res.status(400).json({ msg: "Slug is required" });
@@ -182,7 +189,7 @@ router.get("/dashboard", usermiddleware, async (req, res) => {
 
 router.get("/room", usermiddleware, async (req, res) => {
   try {
-    const userId = (req as any).user;
+    const userId = req.user;
 
     const rooms = await prisma.room.findMany({
      where: { adminId: String(userId) },
