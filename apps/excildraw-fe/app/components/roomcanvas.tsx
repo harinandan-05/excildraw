@@ -3,14 +3,20 @@ import { Canvas } from "./mainCanvas";
 import { WS_BACKEND } from "../config";
 
 type RoomCanvasProps = {
-  roomid: string;
+  roomid: Number;
 };
 
 export default function RoomCanvas({ roomid }: RoomCanvasProps) {
   const [socket, setSocket] = useState<WebSocket>();
 
   useEffect(() => {
-    const ws = new WebSocket(`${WS_BACKEND}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiOTc4Yjk1LTIwMWEtNGFiNi1hZWZkLTBhNzhhYjM5NjM4YyIsImlhdCI6MTc1NTYxNzM3MX0.68q6UFCjmEOVDdp2for7tluD6OFsaLxhYOEyQcvviWU`); 
+
+    const token = localStorage.getItem('token')
+    if(!token){
+      return;
+    }
+
+    const ws = new WebSocket(`${WS_BACKEND}?token=${token}`); 
     setSocket(ws);
 
     ws.onopen = () => {

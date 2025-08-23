@@ -50,7 +50,6 @@ wss.on("connection", (ws, request) => {
     let parsedData: any;
     if (typeof data !== "string") {
       parsedData = JSON.parse(data.toString());
-      console.log(parsedData)
     } else {
       parsedData = JSON.parse(data); // {type: "join-room", roomId: 1}
     }

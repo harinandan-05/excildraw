@@ -1,12 +1,9 @@
-"use client";
-
-import { use, useEffect, useRef, useState, } from "react";
-import { useParams } from "next/navigation";
+import { initDraw } from "../draw";
+import { useEffect, useRef, useState } from "react";
 import { IconBtn } from "./iconButton";
-import { BiPencil } from "react-icons/bi";
-import { BsPencilFill } from "react-icons/bs";
-import { Circle, Pencil, PencilIcon, RectangleEllipsisIcon, RectangleHorizontal, RectangleHorizontalIcon } from "lucide-react";
+import { Circle, Pencil, RectangleHorizontalIcon } from "lucide-react";
 import { Game } from "../draw/game";
+
 export type Tool = "circle" | "rect" | "pencil";
 
 export function Canvas({
@@ -14,7 +11,7 @@ export function Canvas({
     socket
 }: {
     socket: WebSocket;
-    roomid: string;
+    roomid: Number;
 }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [game, setGame] = useState<Game>();
@@ -57,7 +54,7 @@ function Topbar({selectedTool, setSelectedTool}: {
             left: 10
         }}>
             <div className="flex gap-t">
-                <IconBtn
+                <IconBtn 
                     onClick={() => {
                         setSelectedTool("pencil")
                     }}

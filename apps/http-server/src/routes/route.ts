@@ -66,6 +66,10 @@ router.post('/signin',async(req,res) => {
             email:email   
         }
     })
+    if(!Usercheck?.password){
+        res.status(400).json({msg:"no user password"})
+        return
+    }
     if(!Usercheck){
         res.status(400).json({msg:"no user exists"})
         return
@@ -85,39 +89,38 @@ router.post('/signin',async(req,res) => {
     }
 })
 
-router.post('/chat',usermiddleware,async(req,res) => {
-    const userId = req.user;
-    const {slug} = req.body
-    try{
-        if(!slug){
-        res.status(400).json({msg:"no slugs"})
-        return
-        }
-        if(!userId){
-        res.status(400).json({msg:"no tokens present"})
-        return
+
+router.post("/room", usermiddleware, async (req, res) => {
+  try {
+    const userId = (req as any).user;
+    const { slug } = req.body;
+
+    if (!slug) {
+      return res.status(400).json({ msg: "Slug is required" });
     }
 
     const room = await prisma.room.create({
-        data:{
-            slug:slug,
-            adminId:req.user
-        }
-    })
-    if(!room){
-        res.status(200).json({msg:"room is not created"})
-    }
-    res.status(200).json({room: room.id})
+      data: {
+        slug,
+        adminId: userId
+      },
+      select: {
+        id: true,
+        slug: true,
+        adminId: true,
+        createdAt: true
+      }
+    });
 
-    }
-    catch(error){
-        res.status(400).json({msg:"internal server error"})
-        console.log(error)
-    }
-})
+    res.status(201).json(room.id); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
 
 
-router.get("/chats/:roomId", async (req, res) => {
+router.get("/room/:roomId", async (req, res) => {
   const roomid = Number(req.params.roomId);
   const chats = await prismaClient.chat.findMany({
     where: { roomid }
@@ -145,5 +148,61 @@ router.post("/push", async (req, res) => {
     res.status(500).json({ error: "Something went wrong" });
   }
 });
+
+
+router.get("/dashboard", usermiddleware, async (req, res) => {
+  try {
+    const userId = req.user;
+
+    if (!userId) {
+      return res.status(401).json({ msg: "Unauthorized" });
+    }
+
+    const rooms = await prisma.room.findMany({
+      where: {
+        adminId: userId
+      },
+      select: {
+        id: true,
+        slug: true,
+        createdAt: true
+      }
+    });
+
+    res.status(200).json({
+      count: rooms.length,
+      rooms
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+
+router.get("/room", usermiddleware, async (req, res) => {
+  try {
+    const userId = (req as any).user;
+
+    const rooms = await prisma.room.findMany({
+     where: { adminId: String(userId) },
+      select: {
+        id: true,
+        slug: true,
+        adminId: true,
+        createdAt: true
+      }
+    });
+
+    res.status(200).json({ rooms });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
+;
+
+
+
 
 export default router;

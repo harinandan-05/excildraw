@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export async function getShapes(roomid: string) {
+export async function getShapes(roomid: Number) {
   const response = await axios.get(
-    `http://localhost:3001/api/v1/chats/${roomid}`
+    `http://localhost:3001/api/v1/room/${roomid}`
   );
   const messages = response.data.messages;
   console.log(messages, "from backend");
