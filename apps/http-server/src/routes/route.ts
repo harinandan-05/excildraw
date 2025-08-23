@@ -6,7 +6,7 @@ import { usermiddleware } from './middleware';
 import {JWT_SECRET} from '@repo/backend-envs/config'
 
 const prisma =  prismaClient
-const router:Router = express.Router();
+const router = express.Router();
 router.post('/signup',async (req:Request,res:Response) => {
     try{
         
@@ -92,6 +92,7 @@ router.post("/room", usermiddleware, async (req:Request,res:Response) => {
   try {
     const userId = req.user;
     const { slug } = req.body;
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
 
     if (!slug) {
       return res.status(400).json({ msg: "Slug is required" });
@@ -126,22 +127,25 @@ router.post("/room", usermiddleware, async (req:Request,res:Response) => {
 
 
 router.get("/room/:roomId", async (req: Request, res: Response) => {
-  const roomIdParam = req.params.roomId;
+  const { roomId } = req.params;
 
-  if (!roomIdParam) {
-    return res.status(400).json({ error: "Room ID is required" });
+  if (!roomId) {
+    return res.status(400).json({ error: "roomId is required" });
   }
 
-  const roomId = parseInt(roomIdParam, 10);
-  if (isNaN(roomId)) {
-    return res.status(400).json({ error: "Room ID must be a number" });
+  const parsedRoomId = Number(roomId);
+  if (isNaN(parsedRoomId)) {
+    return res.status(400).json({ error: "Invalid roomId" });
   }
 
   const chats = await prismaClient.chat.findMany({
-    where: { roomid: roomId }
+    where: { roomid: parsedRoomId },
   });
+
   res.json({ messages: chats });
 });
+
+
 
 
 router.post("/push", async (req, res) => {
@@ -166,7 +170,9 @@ router.post("/push", async (req, res) => {
 
 router.get("/dashboard", usermiddleware, async (req:Request,res:Response) => {
   try {
+
     const userId = req.user;
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
 
     if (!userId) {
       return res.status(401).json({ msg: "Unauthorized" });
@@ -197,6 +203,7 @@ router.get("/dashboard", usermiddleware, async (req:Request,res:Response) => {
 router.get("/room", usermiddleware, async (req:Request,res:Response) => {
   try {
     const userId = req.user;
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
 
     const rooms = await prisma.room.findMany({
      where: { adminId: String(userId) },
