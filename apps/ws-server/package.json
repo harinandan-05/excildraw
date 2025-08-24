@@ -14,12 +14,14 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@repo/backend-envs": "workspace:*",
+    "@repo/database": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@repo/backend-envs":"workspace:*",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@repo/database":"workspace:*",
-    "@types/ws": "^8.18.1",
     "jsonwebtoken": "^9.0.2",
     "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/ws": "^8.18.1"
   }
 }

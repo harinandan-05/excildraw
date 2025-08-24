@@ -25,7 +25,7 @@ function checkUser(token: string | null): string | null {
   }
 }
 
-wss.on("connection", (ws, request) => {
+wss.on("connection", (ws, request) => { 
   const url = request.url;
   if (!url) {
     ws.close();
@@ -102,8 +102,6 @@ wss.on("connection", (ws, request) => {
   });
 
   ws.on("close", () => {
-    const index = users.findIndex((u) => u.ws === ws);
-    if (index !== -1) users.splice(index, 1);
     console.log(`User ${userId} disconnected. Total: ${users.length}`);
   });
 });
