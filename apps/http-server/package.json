@@ -14,10 +14,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@repo/backend-envs": "workspace:*",
-    "@repo/common": "workspace:*",
-    "@repo/database": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^8.2.3",
@@ -30,6 +26,10 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21"
+    "@types/express": "^4.17.21",
+    "@repo/backend-envs": "workspace:*",
+    "@repo/common": "workspace:*",
+    "@repo/database": "workspace:*",
+    "@repo/typescript-config": "workspace:*"
   }
 }

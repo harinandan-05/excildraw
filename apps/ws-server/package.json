@@ -1,27 +1,21 @@
 {
   "name": "ws-server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./dist/index.js",
     "build": "tsc -b",
+    "start": "node dist/index.js",
     "dev": "pnpm run build && pnpm run start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "@repo/backend-envs": "workspace:*",
-    "@repo/database": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "jsonwebtoken": "^9.0.2",
     "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/ws": "^8.18.1"
+    "@repo/database": "workspace:*",
+    "@types/ws": "^8.18.1",
+    "@repo/backend-envs": "workspace:*"
+
   }
 }
