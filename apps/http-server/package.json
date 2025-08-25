@@ -28,7 +28,6 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@repo/backend-envs": "workspace:*",
-    "@repo/common": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/typescript-config": "workspace:*"
   }
