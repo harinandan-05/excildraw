@@ -16,6 +16,5 @@
       "@repo/database/*": ["../../packages/database/src/*"]
     }
   },
-  "include": ["src", "../../packages/**/*"],
   "exclude": ["node_modules", "dist"]
 }
